@@ -1,0 +1,45 @@
+﻿namespace AdaletliGorevDagitimi.Migrations
+{
+    using AdaletliGorevDagitimi.Models;
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Data.Entity.Migrations;
+    using System.Linq;
+
+    internal sealed class Configuration : DbMigrationsConfiguration<AdaletliGorevDagitimi.Database.ProjectDbContext>
+    {
+        public Configuration()
+        {
+            AutomaticMigrationsEnabled = true;
+        }
+
+        protected override void Seed(AdaletliGorevDagitimi.Database.ProjectDbContext context)
+        {
+            List<string> staffNames = new List<string>() { "Ümit Yılmaz", "Murat Çakır", "Burak Koçyiğit", "Kaan Dedeoğlu", "Kadir Akın", "Oğuzhan Aksu" };
+            Dictionary<string, int> jobs = new Dictionary<string, int>() {
+                {"1.Görev",1 },{"2.Görev",2 },{"3.Görev",3 },{"4.Görev",4 },{"5.Görev",5 },{"6.Görev",6 } };
+
+            for (int i = 0; i < 6; i++)
+            {
+                Staff newStaff = new Staff();
+                newStaff.Name = staffNames[i];
+                context.Staffs.Add(newStaff);
+
+                Job newJob = new Job();
+                newJob.Name = jobs.Keys.ToList()[i];
+                newJob.Difficulty = jobs[jobs.Keys.ToList()[i]];
+                context.Jobs.Add(newJob);
+
+                context.SaveChanges();
+            }
+
+
+
+
+
+
+
+        }
+    }
+}
