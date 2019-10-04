@@ -10,7 +10,6 @@ namespace AdaletliGorevDagitimi.Models
         public string Name { get; set; }
         public int Difficulty { get; set; }
 
-        public virtual ICollection<Staff> Staffs { get; set; }
-        public virtual ICollection<DailyStaffAndJobRelation> DailyStaffAndJobRelations { get; set; }
+        public virtual ICollection<StaffJobRelation> StaffJobRelations { get; set; }
     }
 }

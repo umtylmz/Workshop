@@ -16,13 +16,6 @@ namespace AdaletliGorevDagitimi.Database
 
         public DbSet<Staff> Staffs { get; set; }
         public DbSet<Job> Jobs { get; set; }
-        public DbSet<DailyStaffAndJobRelation> DailyStaffAndJobRelations { get; set; }
-
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-            modelBuilder.Configurations.Add(new StaffMapping());
-            modelBuilder.Configurations.Add(new JobMapping());
-        }
-
+        public DbSet<StaffJobRelation> StaffJobRelations { get; set; }
     }
 }

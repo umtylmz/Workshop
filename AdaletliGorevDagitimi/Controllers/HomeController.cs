@@ -19,9 +19,10 @@ namespace AdaletliGorevDagitimi.Controllers
         public ActionResult Index()
         {
             JobAssigner();
+
             return View();
         }
-        public JsonResult getStaffNames()
+        public JsonResult GetStaffNames()
         {
             List<Staff> staffList = _db.Staffs.ToList();
             List<StaffDTO> staffListDTO = new List<StaffDTO>();
@@ -31,76 +32,70 @@ namespace AdaletliGorevDagitimi.Controllers
 
             return Json(staffListDTO, JsonRequestBehavior.AllowGet);
         }
-        public void JobListRegenerator()
+
+        public void JobAssigner()
         {
-            List<Staff> staffList = _db.Staffs.ToList();
             List<Job> jobList = _db.Jobs.ToList();
+            List<Staff> staffList = _db.Staffs.ToList();
+            staffList.Sort((a, b) => decimal.Compare(a.JobPoint, b.JobPoint));
+
+            int counter = staffList.Count / 2 - 1;
+            int counter2 = 1;
+
+            Random rnd = new Random();
 
             for (int i = 0; i < staffList.Count; i++)
             {
-                for (int j = 0; j < jobList.Count; j++)
+                if (staffList[counter].JobPoint > 3.50m)
                 {
-                    staffList[i].Jobs.Add(jobList[j]);
+                    Job assignedJob = jobList[rnd.Next(0, jobList.Count / 2 + 1)];
 
-                    _db.Entry(staffList[i]).State = System.Data.Entity.EntityState.Modified;
+                    jobList.RemoveAll(a => a.ID == assignedJob.ID);
+
+                    StaffJobRelation newStaffJobRelation = new StaffJobRelation();
+                    newStaffJobRelation.JobID = assignedJob.ID;
+                    newStaffJobRelation.StaffID = staffList[counter].ID;
+
+                    _db.StaffJobRelations.Add(newStaffJobRelation);
                     _db.SaveChanges();
+
+                    staffList.RemoveAt(counter);
                 }
+                else if (staffList[counter].JobPoint < 3.50m)
+                {
+                    Job assignedJob = jobList[rnd.Next(jobList.Count / 2 + 1, jobList.Count)];
+
+                    jobList.RemoveAll(a => a.ID == assignedJob.ID);
+
+                    StaffJobRelation newStaffJobRelation = new StaffJobRelation();
+                    newStaffJobRelation.JobID = assignedJob.ID;
+                    newStaffJobRelation.StaffID = staffList[counter].ID;
+
+                    _db.StaffJobRelations.Add(newStaffJobRelation);
+                    _db.SaveChanges();
+
+                    staffList.RemoveAt(counter);
+                }
+
+
+                counter += counter2;
+                counter2 = counter2 % 2 == 0 ? (Math.Abs(counter2) + 1) : (Math.Abs(counter2) + 1) * (-1);
             }
 
-        }
-        public void JobAssigner()
-        {
-            bool controlItem = _db.Staffs.Take(1).ToList()[0].Jobs.ToList().Count == 0;
-
-            if (controlItem)
-                JobListRegenerator();
-
-            List<Staff> staffList = _db.Staffs.ToList();
-            Random rnd = new Random();
-            List<Job> tempJobList = new List<Job>();
-
-            for (int i = 0; i < 6; i++)
+            for (int i = staffList.Count-1; i >= 0;) //hem buranın hem yukardaki forların içini ayarlayacağım, sonra tekrarlayan kodları metoda çevireceğim, sonra puan hesaplama metodunu yazacağım bitecek
             {
-                while (true)
-                {
-                    Job job = staffList[i].Jobs.ToList()[rnd.Next(staffList[i].Jobs.ToList().Count)];
+                Job assignedJob = jobList[rnd.Next(jobList.Count)];
 
-                    if (tempJobList.Contains(job))
-                        continue;
-                    else
-                    {
-                        if (i < 5)
-                        {
-                            bool controller = false;
+                jobList.RemoveAll(a => a.ID == assignedJob.ID);
 
-                            foreach (Job item in _db.Staffs.ToList()[i + 1].Jobs.ToList())
-                            {
-                                if (!tempJobList.Contains(item) && job.ID != item.ID)
-                                    break;
-                                else
-                                    controller = true;
-                            }
+                StaffJobRelation newStaffJobRelation = new StaffJobRelation();
+                newStaffJobRelation.JobID = assignedJob.ID;
+                newStaffJobRelation.StaffID = staffList[i].ID;
 
-                            if (controller == true)
-                                continue;
-                        }
+                _db.StaffJobRelations.Add(newStaffJobRelation);
+                _db.SaveChanges();
 
-                        tempJobList.Add(job);
-                        staffList[i].Jobs.Remove(job);
-                        _db.Entry(staffList[i]).State = System.Data.Entity.EntityState.Modified;
-
-                        DailyStaffAndJobRelation newData = new DailyStaffAndJobRelation()
-                        {
-                            JobID = job.ID,
-                            StaffID = staffList[i].ID
-                        };
-                        _db.Entry(newData).State = System.Data.Entity.EntityState.Added;
-
-                        _db.SaveChanges();
-
-                        break;
-                    }
-                }
+                staffList.RemoveAt(i);
             }
         }
     }

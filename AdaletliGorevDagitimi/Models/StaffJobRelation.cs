@@ -5,9 +5,9 @@ using System.Web;
 
 namespace AdaletliGorevDagitimi.Models
 {
-    public class DailyStaffAndJobRelation : BaseClass
+    public class StaffJobRelation : BaseClass
     {
-        public DailyStaffAndJobRelation()
+        public StaffJobRelation()
         {
             Date = DateTime.Now;
         }

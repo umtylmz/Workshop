@@ -24,6 +24,7 @@
             {
                 Staff newStaff = new Staff();
                 newStaff.Name = staffNames[i];
+                newStaff.JobPoint = 3.5m;
                 context.Staffs.Add(newStaff);
 
                 Job newJob = new Job();

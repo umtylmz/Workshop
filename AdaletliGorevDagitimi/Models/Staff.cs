@@ -8,8 +8,8 @@ namespace AdaletliGorevDagitimi.Models
     public class Staff : BaseClass
     {
         public string Name { get; set; }
+        public decimal JobPoint { get; set; }
 
-        public virtual ICollection<Job> Jobs { get; set; }
-        public virtual ICollection<DailyStaffAndJobRelation> DailyStaffAndJobRelations { get; set; }
+        public virtual ICollection<StaffJobRelation> StaffJobRelations { get; set; }
     }
 }
