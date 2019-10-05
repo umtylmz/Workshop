@@ -10,7 +10,7 @@ namespace AdaletliGorevDagitimi.Database
 {
     public class ProjectDbContext : DbContext
     {
-        public ProjectDbContext() : base("server=.;database=ProjectDb;uid=sa;pwd=123")
+        public ProjectDbContext() : base("Server=.;Database=ProjectDb;Trusted_Connection=True;")
         {
 
         }
