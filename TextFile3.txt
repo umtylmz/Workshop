@@ -1,0 +1,151 @@
+using AdaletliGorevDagitimi.Database;
+using AdaletliGorevDagitimi.Models;
+using AdaletliGorevDagitimi.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Web.Mvc;
+
+namespace AdaletliGorevDagitimi.Controllers
+{
+    public class HomeController : Controller
+    {
+        ProjectDbContext _db;
+        public HomeController()
+        {
+            _db = new ProjectDbContext();
+        }
+        public ActionResult Index()
+        {
+            JobAssigner();
+
+            return View();
+        }
+
+        //List<StaffJobRelation> staffJobRelations;
+        //List<Staff> staffList;
+
+        public JsonResult GetStaffNames()
+        {
+            List<Staff> staffList = _db.Staffs.ToList();
+            List<StaffDTO> staffListDTO = new List<StaffDTO>();
+
+            for (int i = 0; i < staffList.Count; i++)
+                staffListDTO.Add(new StaffDTO() { Name = staffList[i].Name });
+
+            return Json(staffListDTO, JsonRequestBehavior.AllowGet);
+        }
+        public void JobAssigner()
+        {
+            List<Job> jobList = _db.Jobs.ToList();
+            List<Staff> staffList = _db.Staffs.ToList();
+            //staffList.Sort((a, b) => decimal.Compare(a.JobPoint, b.JobPoint));
+
+            //int counter = staffList.Count / 2 - 1;
+            //int counter2 = 1;
+
+            Random rnd = new Random();
+
+            for (int i = 0; i < staffList.Count; i++)
+            {
+                if (staffList[i].JobPoint > 3.5m)
+                {
+                    List<Job> deneme = jobList.Where(a => a.Difficulty < 4 & a.Difficulty >= 1).ToList();
+
+                    Job assignedJob;
+
+                    if (deneme.Count == 0)
+                        continue;
+                    else
+                        assignedJob = deneme[rnd.Next(deneme.Count)];
+
+                    jobList.Remove(assignedJob);
+
+                    StaffJobRelation newStaffJobRelation = new StaffJobRelation();
+                    newStaffJobRelation.JobID = assignedJob.ID;
+                    newStaffJobRelation.StaffID = staffList[i].ID;
+
+                    _db.StaffJobRelations.Add(newStaffJobRelation);
+                    _db.SaveChanges();
+
+                    staffList[i] = null;
+                }
+                else if (staffList[i].JobPoint < 3.5m)
+                {
+                    List<Job> deneme = jobList.Where(a => a.Difficulty > 3).ToList();
+
+                    Job assignedJob;
+
+                    if (deneme.Count == 0)
+                        continue;
+                    else
+                        assignedJob = deneme[rnd.Next(deneme.Count)];
+
+                    jobList.Remove(assignedJob);
+
+                    StaffJobRelation newStaffJobRelation = new StaffJobRelation();
+                    newStaffJobRelation.JobID = assignedJob.ID;
+                    newStaffJobRelation.StaffID = staffList[i].ID;
+
+                    _db.StaffJobRelations.Add(newStaffJobRelation);
+                    _db.SaveChanges();
+
+                    staffList[i] = null;
+                }
+
+
+                //counter += counter2;
+                //counter2 = counter2 % 2 == 0 ? (Math.Abs(counter2) + 1) : (Math.Abs(counter2) + 1) * (-1);
+            }
+
+            for (int i = 0; i < staffList.Count; i++)
+            {
+                if (jobList.Count == 0)
+                    break;
+                else if (staffList[i] == null)
+                    continue;
+
+                Job assignedJob = jobList[rnd.Next(jobList.Count)];
+
+                jobList.RemoveAll(a => a.ID == assignedJob.ID);
+
+                StaffJobRelation newStaffJobRelation = new StaffJobRelation();
+                newStaffJobRelation.JobID = assignedJob.ID;
+                newStaffJobRelation.StaffID = staffList[i].ID;
+
+                _db.StaffJobRelations.Add(newStaffJobRelation);
+                _db.SaveChanges();
+            }
+
+            JobPointCalculator();
+        }
+        public void JobPointCalculator()
+        {
+            List<StaffJobRelation> staffJobRelations = _db.StaffJobRelations.ToList();
+            List<Staff> staffList = _db.Staffs.ToList();
+
+            for (int i = 0; i < staffList.Count; i++)
+            {
+                //if (staffJobRelations.Count / staffList.Count < 10)
+                    staffList[i].JobPoint = staffJobRelations.Where(a => a.StaffID == staffList[i].ID).OrderByDescending(a => a.Date).Sum(a => a.Job.Difficulty) / (decimal)staffJobRelations.Where(a => a.StaffID == staffList[i].ID).Count();
+                //else
+                //    staffList[i].JobPoint = staffJobRelations.Where(a => a.StaffID == staffList[i].ID).OrderByDescending(a => a.Date).Take(10).Sum(a => a.Job.Difficulty) / 10m;
+
+                _db.Entry(staffList[i]).State = System.Data.Entity.EntityState.Modified;
+                _db.SaveChanges();
+            }
+        }
+        //public Job JobSelector(decimal jobPoint)
+        //{
+        //    if (jobPoint < 3.5m)
+        //    {
+        //        job
+        //    }
+        //    else if (jobPoint > 3.5m)
+        //    {
+
+        //    }
+        //}
+    }
+}
+

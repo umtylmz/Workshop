@@ -154,6 +154,8 @@
   <ItemGroup>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Database\Mappings\StaffJobRelationMapping.cs" />
+    <Compile Include="Database\Mappings\StaffMapping.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -164,7 +166,6 @@
     <Compile Include="Models\Staff.cs" />
     <Compile Include="Models\StaffJobRelation.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ViewModels\DailyStaffAndJobRelationDTO.cs" />
     <Compile Include="ViewModels\StaffDTO.cs" />
   </ItemGroup>
   <ItemGroup>

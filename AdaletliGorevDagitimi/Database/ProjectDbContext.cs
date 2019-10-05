@@ -1,4 +1,5 @@
-﻿using AdaletliGorevDagitimi.Models;
+﻿using AdaletliGorevDagitimi.Database.Mappings;
+using AdaletliGorevDagitimi.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -17,5 +18,11 @@ namespace AdaletliGorevDagitimi.Database
         public DbSet<Staff> Staffs { get; set; }
         public DbSet<Job> Jobs { get; set; }
         public DbSet<StaffJobRelation> StaffJobRelations { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Configurations.Add(new StaffMapping());
+            modelBuilder.Configurations.Add(new StaffJobRelationMapping());
+        }
     }
 }
