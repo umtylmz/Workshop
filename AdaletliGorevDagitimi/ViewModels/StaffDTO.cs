@@ -6,8 +6,9 @@ using System.Web;
 
 namespace AdaletliGorevDagitimi.ViewModels
 {
-    public class StaffDTO
+    public class StaffDTO : BaseClass
     {
         public string Name { get; set; }
+        public decimal JobPoint { get; set; }
     }
 }

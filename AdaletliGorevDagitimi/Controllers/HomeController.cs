@@ -11,14 +11,13 @@ namespace AdaletliGorevDagitimi.Controllers
     public class HomeController : Controller
     {
         ProjectDbContext _db;
+
         public HomeController()
         {
             _db = new ProjectDbContext();
         }
         public ActionResult Index()
         {
-            JobAssigner();
-
             return View();
         }
 
@@ -26,15 +25,45 @@ namespace AdaletliGorevDagitimi.Controllers
         StaffJobRelation newStaffJobRelation;
         Job assignedJob;
 
-
-
         public JsonResult GetStaffNames()
         {
             staffList = _db.Staffs.ToList();
             List<StaffDTO> staffListDTO = new List<StaffDTO>();
 
             for (int i = 0; i < staffList.Count; i++)
-                staffListDTO.Add(new StaffDTO() { Name = staffList[i].Name });
+                staffListDTO.Add(new StaffDTO() { ID = staffList[i].ID, Name = staffList[i].Name });
+
+            return Json(staffListDTO, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult GetStaffJobs()
+        {
+            List<StaffJobRelation> relations = _db.StaffJobRelations.ToList();
+            List<StaffJobRelationDTO> relationsDTO = new List<StaffJobRelationDTO>();
+            List<StaffJobRelationDTO> orderedRelationsDTO = new List<StaffJobRelationDTO>();
+
+            for (int i = 0; i < relations.Count; i++)
+                relationsDTO.Add(new StaffJobRelationDTO() { Date = relations[i].Date, JobName = relations[i].Job.Name, StaffID = relations[i].StaffID, });
+
+            int counter = relationsDTO.Count;
+
+            for (int i = 0; i < counter / 6; i++)
+            {
+                for (int j = 1; j <= 6; j++)
+                {
+                    orderedRelationsDTO.Add(relationsDTO.Find(a => a.StaffID == j));
+                    relationsDTO.Remove(relationsDTO.Find(a => a.StaffID == j));
+                }
+            }
+
+            return Json(orderedRelationsDTO, JsonRequestBehavior.AllowGet);
+        }
+        public JsonResult GetJobPoints()
+        {
+            staffList = _db.Staffs.ToList();
+            List<StaffDTO> staffListDTO = new List<StaffDTO>();
+
+            for (int i = 0; i < staffList.Count; i++)
+                staffListDTO.Add(new StaffDTO() { ID = staffList[i].ID, JobPoint = staffList[i].JobPoint });
 
             return Json(staffListDTO, JsonRequestBehavior.AllowGet);
         }
@@ -113,7 +142,6 @@ namespace AdaletliGorevDagitimi.Controllers
                 _db.SaveChanges();
             }
         }
-
         public void AddNewStaffJobRelation(int i)
         {
             newStaffJobRelation = new StaffJobRelation();
