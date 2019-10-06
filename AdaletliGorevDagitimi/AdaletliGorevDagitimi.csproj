@@ -147,10 +147,10 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Database\Mappings\StaffJobRelationMapping.cs" />
     <Compile Include="Database\Mappings\StaffMapping.cs" />
+    <Compile Include="Database\ProjectDbInitializer.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\BaseClass.cs" />
     <Compile Include="Models\Job.cs" />
     <Compile Include="Database\ProjectDbContext.cs" />

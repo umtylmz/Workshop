@@ -12,7 +12,7 @@ namespace AdaletliGorevDagitimi.Database
     {
         public ProjectDbContext() : base("Server=.;Database=ProjectDb;Trusted_Connection=True;")
         {
-
+            System.Data.Entity.Database.SetInitializer<ProjectDbContext>(new ProjectDbInitializer());
         }
 
         public DbSet<Staff> Staffs { get; set; }
