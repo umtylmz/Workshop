@@ -22,6 +22,7 @@ namespace AdaletliGorevDagitimi.Controllers
         }
 
         List<Staff> staffList;
+        List<StaffJobRelation> staffJobRelationList;
         StaffJobRelation newStaffJobRelation;
         Job assignedJob;
 
@@ -131,7 +132,7 @@ namespace AdaletliGorevDagitimi.Controllers
         }
         public void JobPointCalculator()
         {
-            List<StaffJobRelation> staffJobRelationList = _db.StaffJobRelations.ToList();
+            staffJobRelationList = _db.StaffJobRelations.ToList();
             staffList = _db.Staffs.ToList();
 
             for (int i = 0; i < staffList.Count; i++)
@@ -149,6 +150,23 @@ namespace AdaletliGorevDagitimi.Controllers
             newStaffJobRelation.StaffID = staffList[i].ID;
 
             _db.StaffJobRelations.Add(newStaffJobRelation);
+            _db.SaveChanges();
+        }
+        public void ClearAllData()
+        {
+            staffJobRelationList = _db.StaffJobRelations.ToList();
+
+            foreach (StaffJobRelation item in staffJobRelationList)
+                _db.Entry(item).State = System.Data.Entity.EntityState.Deleted;
+
+            staffList = _db.Staffs.ToList();
+
+            foreach (Staff item in staffList)
+            {
+                item.JobPoint = 3.5m;
+                _db.Entry(item).State = System.Data.Entity.EntityState.Modified;
+            }
+
             _db.SaveChanges();
         }
 

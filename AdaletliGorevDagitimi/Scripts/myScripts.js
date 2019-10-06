@@ -24,8 +24,24 @@
             }
         });
 
+        setTimeout(function () {
             FillJobList();
             FillJobPoints();
+        }, 500);            
+    });
+
+    $("#clearAllData").click(function () {
+        $.ajax({
+            url: "/Home/ClearAllData",
+            success: function () {
+                alert("Veriler başarıyla temizlendi.");
+                FillJobList();
+                FillJobPoints();
+            },
+            error: function () {
+                alert("Sistemde bir hata meydana geldi.");
+            }
+        });
     });
 
     function FillJobList() {
@@ -33,6 +49,8 @@
             url: "/Home/GetStaffJobs",
             success: function (data) {
                 $("tbody").html("");
+
+                var count = 1;
 
                 $.each(data, function (index, value) {
                     var trTagCount = $("tbody tr");
