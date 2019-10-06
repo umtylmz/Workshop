@@ -1,8 +1,0 @@
-﻿MVC kullanıldı
-EF codefirst kullanıldı
-migration yapıldı
-seedler eklendi
-mappings yapıldı fluent api
-bootstrap ve jquery ve html kullanıldı
-base class ve inherince
-circular database type
