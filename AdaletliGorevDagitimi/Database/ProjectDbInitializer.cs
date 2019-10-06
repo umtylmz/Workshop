@@ -1,20 +1,15 @@
-﻿namespace AdaletliGorevDagitimi.Migrations
+﻿using AdaletliGorevDagitimi.Models;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Linq;
+using System.Web;
+
+namespace AdaletliGorevDagitimi.Database
 {
-    using AdaletliGorevDagitimi.Models;
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Data.Entity.Migrations;
-    using System.Linq;
-
-    internal sealed class Configuration : DbMigrationsConfiguration<AdaletliGorevDagitimi.Database.ProjectDbContext>
+    public class ProjectDbInitializer : CreateDatabaseIfNotExists<ProjectDbContext>
     {
-        public Configuration()
-        {
-            AutomaticMigrationsEnabled = true;
-        }
-
-        protected override void Seed(AdaletliGorevDagitimi.Database.ProjectDbContext context)
+        protected override void Seed(ProjectDbContext context)
         {
             List<string> staffNames = new List<string>() { "Ümit Yılmaz", "Murat Çakır", "Burak Koçyiğit", "Kaan Dedeoğlu", "Kadir Akın", "Oğuzhan Aksu" };
             Dictionary<string, int> jobs = new Dictionary<string, int>() {
@@ -34,13 +29,6 @@
 
                 context.SaveChanges();
             }
-
-
-
-
-
-
-
         }
     }
 }
