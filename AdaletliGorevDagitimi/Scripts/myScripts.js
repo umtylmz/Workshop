@@ -5,6 +5,8 @@
             $.each(data, function (index, value) {
                 $("thead tr:nth-child(2)").append("<th scope='col'>" + value.Name + "</th>");
             });
+
+            $(".container div:nth-child(2)").remove();
         },
         error: function () {
             alert("Sistemde bir hata meydana geldi.");
