@@ -44,6 +44,7 @@ namespace Server
             while (socket.Connected)
             {
                 Mesaj alinan = (Mesaj)bf.Deserialize(stream);
+                lstbxConversation.Items.Add(alinan);
             }
         }
 
