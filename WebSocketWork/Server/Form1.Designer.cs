@@ -57,6 +57,7 @@
             this.btnGonder.TabIndex = 2;
             this.btnGonder.Text = "Gönder";
             this.btnGonder.UseVisualStyleBackColor = true;
+            this.btnGonder.Click += new System.EventHandler(this.btnGonder_Click);
             // 
             // label1
             // 

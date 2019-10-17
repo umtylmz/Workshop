@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace Server
 {
     [Serializable]
-    class Mesaj
+    public class Mesaj
     {
         public string Gonderen { get; set; }
         public string Mesaji { get; set; }
