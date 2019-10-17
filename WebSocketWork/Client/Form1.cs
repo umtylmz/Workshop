@@ -30,7 +30,7 @@ namespace Client
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            client = new TcpClient();
+            client = new TcpClient(txtConnect.Text,1453);
             stream = client.GetStream();
             Thread dinleyici = new Thread(BaglantiDinle);
             dinleyici.Start();
