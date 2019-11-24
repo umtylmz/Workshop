@@ -15,7 +15,8 @@ namespace TravianTroopsCounter
     {
         List<> Users;
         string operation = null;
-        
+               
+
         public Form1()
         {
             InitializeComponent();
